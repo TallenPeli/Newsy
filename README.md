@@ -1,70 +1,121 @@
-# Getting Started with Create React App
+# Newsy 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A web application that provides summaries of news articles from RSS feeds. Built with a FastAPI backend and a React frontend, it fetches articles from user-specified RSS feeds and generates summaries with the help of OpenAI's API. The summaries are presented in Markdown format for readability.
 
-## Available Scripts
+## Features
+- Fetches and displays news articles from multiple RSS feeds.
+- Uses OpenAI to generate concise and structured summaries of the articles.
+- Provides a user-friendly interface for managing RSS feeds and viewing summaries.
+- Includes CORS middleware to support cross-origin requests from the frontend.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Project Structure
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend (React)**: User interface for adding RSS feed URLs, viewing summaries, and managing feeds.
+- **Backend (FastAPI)**: Endpoint for retrieving feed content and generating summaries via OpenAI API.
+- **openAiApi.py**: Helper class to interact with OpenAI’s API.
+- **feedManager.py**: Helper module for fetching data from RSS feeds.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Getting Started
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- [Python 3.8+](https://www.python.org/)
+- [Node.js 16+ (for frontend)](https://nodejs.org/)
+- [OpenAI API Key](https://platform.openai.com/signup/)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Setup Instructions
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/TallenPeli/newsy
+   cd newsy
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Setup the backend (FastAPI)**:
+   - Create and activate a virtual environment:
 
-### `npm run eject`
+     ```bash
+     python3 -m venv .venv
+     source .venv/bin/activate  # for bash
+     source .venv/bin/activate.fish  # for fish shell
+     ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+   - Install dependencies:
+     ```bash
+     pip install fastapi uvicorn feedparser openai
+     ```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+   - Set up your OpenAI API key in a `.env` file:
+     ```bash
+     echo "OPENAI_API_KEY=your_openai_api_key" > .env
+     ```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+     Or set the environment variable in the current terminal session
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+     ```bash
+     export OPENAI_API_KEY=your_openai_api_key
+     echo $OPENAI_API_KEY
+     ```
 
-## Learn More
+3. **Run the backend server**:
+   ```bash
+   fastapi dev webserver.py
+   ```
+   The backend will start on `http://localhost:8000`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. **Setup the frontend (React)**:
+   - Navigate to the frontend directory:
+     ```bash
+     cd frontend
+     ```
+   - Install dependencies:
+     ```bash
+     npm install
+     ```
+   - Start the frontend development server:
+     ```bash
+     npm start
+     ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+   The frontend will start on `http://localhost:3000` and communicate with the backend to fetch and display summaries.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Usage
 
-### Analyzing the Bundle Size
+1. **Adding an RSS Feed**:
+   - Enter an RSS feed URL in the input field and click the `+` button to add it.
+   - The feed will appear in the sidebar, allowing easy access and management.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. **Generating Summaries**:
+   - After adding feeds, click the “Generate Summary” button.
+   - Summaries for the selected feeds will be generated and displayed in the content area, formatted in Markdown for readability.
 
-### Making a Progressive Web App
+3. **Managing Feeds**:
+   - Click the ❌ button next to each feed in the sidebar to remove it from the list.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+- **POST /get_summary**: Accepts a list of RSS feed URLs and returns a summary for each feed.
+  - **Request**: JSON object with `urls` as a list of RSS feed URLs.
+  - **Response**: JSON object with `summary` in Markdown format.
 
-### Deployment
+Example:
+```json
+POST /get_summary
+{
+    "urls": ["https://example.com/feed1.xml", "https://example.com/feed2.xml"]
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+---
 
-### `npm run build` fails to minify
+## License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the MIT License.
